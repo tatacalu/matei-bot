@@ -26,7 +26,7 @@ public class RootRestController {
     @RequestMapping("/")
     public String index() {
 
-        LOGGER.info("INFO  level - GET / command received; sample config var value: [{}]", configurationProperties.getSampleHerokuConfigVar());
+        LOGGER.info("INFO  level - GET / command received; GitHub token length: [{}]", configurationProperties.getGithubToken().length());
 
         ZonedDateTime now = ZonedDateTime.now(ZoneOffset.UTC);
 

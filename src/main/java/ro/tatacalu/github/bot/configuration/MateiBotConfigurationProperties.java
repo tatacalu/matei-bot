@@ -8,5 +8,5 @@ public interface MateiBotConfigurationProperties {
     /**
      * Return the value of the sample Heroku configuration variable.
      */
-    String getSampleHerokuConfigVar();
+    String getGithubToken();
 }

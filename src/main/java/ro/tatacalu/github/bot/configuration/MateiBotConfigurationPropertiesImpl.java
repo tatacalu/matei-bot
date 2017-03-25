@@ -1,5 +1,6 @@
 package ro.tatacalu.github.bot.configuration;
 
+import org.hibernate.validator.constraints.Length;
 import org.hibernate.validator.constraints.NotBlank;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.stereotype.Component;
@@ -14,14 +15,17 @@ import org.springframework.validation.annotation.Validated;
 @Validated
 public class MateiBotConfigurationPropertiesImpl implements MateiBotConfigurationProperties {
 
-    @NotBlank
-    private String sampleHerokuConfigVar;
+    @NotBlank(message = "The GitHub token must be provided")
+    @Length(min = 40, max = 40, message = "The GitHub token length must be exactly 40 characters long")
+    private String githubToken;
 
-    public String getSampleHerokuConfigVar() {
-        return sampleHerokuConfigVar;
+
+    public void setGithubToken(String githubToken) {
+        this.githubToken = githubToken;
     }
 
-    public void setSampleHerokuConfigVar(String sampleHerokuConfigVar) {
-        this.sampleHerokuConfigVar = sampleHerokuConfigVar;
+    @Override
+    public String getGithubToken() {
+        return githubToken;
     }
 }

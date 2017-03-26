@@ -31,6 +31,10 @@ public class Issue {
     URI repositoryUrl;
 
     @NotNull
+    @JsonProperty("comments_url")
+    URI commentsUrl;
+
+    @NotNull
     @NotEmpty
     String title;
 

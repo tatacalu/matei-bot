@@ -15,6 +15,8 @@ import javax.validation.constraints.Pattern;
 @Value
 public class IssueCommentEvent {
 
+    public static final String ACTION_CREATED = "created";
+
     @NotBlank
     @Pattern(regexp = "^created|edited|deleted$", message = "action field can only have one of the following values: \"created\", \"edited\", \"deleted\"")
     String action;

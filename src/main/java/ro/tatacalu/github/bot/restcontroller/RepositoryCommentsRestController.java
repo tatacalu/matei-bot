@@ -2,6 +2,7 @@ package ro.tatacalu.github.bot.restcontroller;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -9,6 +10,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RestController;
 import ro.tatacalu.github.bot.domain.IssueCommentEvent;
+import ro.tatacalu.github.bot.manager.RepositoryCommentsManager;
 import ro.tatacalu.github.bot.util.HeaderUtils;
 
 import java.util.Map;
@@ -22,6 +24,9 @@ public class RepositoryCommentsRestController {
     private static final Logger LOGGER = LoggerFactory.getLogger(RepositoryCommentsRestController.class);
 
     public static final String REQUEST_MAPPING_PATH = "/receive-github-event";
+
+    @Autowired
+    private RepositoryCommentsManager repositoryCommentsManager;
 
     /**
      * Method called when a GitHub event of an unsupported type not explicitly dealt with has been received by the application. The event type is transmitted
@@ -49,5 +54,7 @@ public class RepositoryCommentsRestController {
                                                       @RequestHeader final Map<String, String> requestHeaders) {
 
         LOGGER.info("GitHub issue_comment webhook event received! Headers: {}, IssueCommentEvent: {}", requestHeaders, issueCommentEvent);
+
+        repositoryCommentsManager.processEvent(issueCommentEvent);
     }
 }

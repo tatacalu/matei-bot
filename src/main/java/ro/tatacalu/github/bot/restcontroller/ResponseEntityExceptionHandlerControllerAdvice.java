@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import ro.tatacalu.github.bot.exception.BaseBotCommandException;
 import ro.tatacalu.github.bot.exception.GitHubCommentCreationException;
+import ro.tatacalu.github.bot.exception.UnsupportedIssueCommentEventException;
 
 /**
  * Controller advice responsible for global exception handling.
@@ -14,6 +15,7 @@ import ro.tatacalu.github.bot.exception.GitHubCommentCreationException;
 @ControllerAdvice
 @Slf4j
 public class ResponseEntityExceptionHandlerControllerAdvice  {
+
     @ExceptionHandler
     public ResponseEntity<String> handleGenericException(BaseBotCommandException ex) {
         LOGGER.error("Exception occurred!", ex);
@@ -26,5 +28,12 @@ public class ResponseEntityExceptionHandlerControllerAdvice  {
         LOGGER.error("GitHubCommentCreationException occurred!", ex);
 
         return new ResponseEntity<>("Exception occurred while trying to create a GitHub comment: " + ex.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+
+    @ExceptionHandler
+    public ResponseEntity<String> handleException(UnsupportedIssueCommentEventException ex) {
+        LOGGER.info("UnsupportedIssueCommentEventException occurred: {}", ex.getMessage());
+
+        return new ResponseEntity<>("Unsupported issue comment received: " + ex.getMessage(), HttpStatus.BAD_REQUEST);
     }
 }

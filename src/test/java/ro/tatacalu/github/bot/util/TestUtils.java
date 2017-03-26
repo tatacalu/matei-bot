@@ -1,8 +1,13 @@
 package ro.tatacalu.github.bot.util;
 
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
+import org.springframework.util.MultiValueMap;
 import ro.tatacalu.github.bot.domain.Issue;
 import ro.tatacalu.github.bot.domain.IssueComment;
 import ro.tatacalu.github.bot.domain.IssueCommentEvent;
+import ro.tatacalu.github.bot.domain.IssueCommentToCreate;
 import ro.tatacalu.github.bot.domain.IssuePullRequest;
 
 import java.net.URI;
@@ -37,10 +42,22 @@ public class TestUtils {
     public static final Long ISSUE_NUMBER = 1L;
     public static final String ISSUE_TITLE = "Pull Request Title";
 
+    public static final String HELLO_WORLD_MESSAGE_BODY = "bot: hello world";
+
     /**
      * Utility class - no instantiation.
      */
     private TestUtils() {}
+
+    /**
+     * Creates a {@link IssueComment} with generic body (not a bot command).
+     *
+     * @return a new {@link IssueComment} instance
+     */
+    public static IssueComment createIssueCommentGeneric() {
+        Instant now = Instant.now();
+        return new IssueComment(COMMENT_ID, COMMENT_URL, COMMENT_ISSUE_URL, COMMENT_BODY_GENERIC, now, now);
+    }
 
     /**
      * Creates a {@link IssueCommentEvent} instance representing a newly created regular issue, NOT a pull request.
@@ -49,7 +66,7 @@ public class TestUtils {
      */
     public static IssueCommentEvent createCreatedIssueCommentEventRegularIssue() {
         Instant now = Instant.now();
-        IssueComment issueComment = new IssueComment(COMMENT_ID, COMMENT_URL, COMMENT_ISSUE_URL, COMMENT_BODY_GENERIC, now, now);
+        IssueComment issueComment = createIssueCommentGeneric();
         Issue issue = new Issue(ISSUE_ID, ISSUE_NUMBER, ISSUE_URL, ISSUE_REPOSITORY_URL, ISSUE_COMMENTS_URL, ISSUE_TITLE, now, now, null);
 
         return new IssueCommentEvent(IssueCommentEvent.ACTION_CREATED, issueComment, issue);
@@ -62,7 +79,7 @@ public class TestUtils {
      */
     public static IssueCommentEvent createCreatedIssueCommentEventPullRequestGeneric() {
         Instant now = Instant.now();
-        IssueComment issueComment = new IssueComment(COMMENT_ID, COMMENT_URL, COMMENT_ISSUE_URL, COMMENT_BODY_GENERIC, now, now);
+        IssueComment issueComment = createIssueCommentGeneric();
         IssuePullRequest issuePullRequest = new IssuePullRequest(ISSUE_PULL_REQUEST_URL);
         Issue issue = new Issue(ISSUE_ID, ISSUE_NUMBER, ISSUE_URL, ISSUE_REPOSITORY_URL, ISSUE_COMMENTS_URL, ISSUE_TITLE, now, now, issuePullRequest);
 
@@ -90,10 +107,32 @@ public class TestUtils {
      */
     public static IssueCommentEvent createEditedIssueCommentEventPullRequest() {
         Instant now = Instant.now();
-        IssueComment issueComment = new IssueComment(COMMENT_ID, COMMENT_URL, COMMENT_ISSUE_URL, COMMENT_BODY_GENERIC, now, now);
+        IssueComment issueComment = createIssueCommentGeneric();
         IssuePullRequest issuePullRequest = new IssuePullRequest(ISSUE_PULL_REQUEST_URL);
         Issue issue = new Issue(ISSUE_ID, ISSUE_NUMBER, ISSUE_URL, ISSUE_REPOSITORY_URL, ISSUE_COMMENTS_URL, ISSUE_TITLE, now, now, issuePullRequest);
 
         return new IssueCommentEvent("edited", issueComment, issue);
+    }
+
+    /**
+     * Create a {@link HttpEntity} to be sent to GitHub via HTTP POST in order to create a new pull request comment.
+     *
+     * @param commentBody the comment body
+     * @return the {@link HttpEntity} representing the comment to be created
+     */
+    public static HttpEntity<IssueCommentToCreate> createIssueCommentToCreateHttpEntity(final String commentBody) {
+        IssueCommentToCreate issueCommentToCreate = new IssueCommentToCreate(commentBody);
+        MultiValueMap<String, String> httpHeaders = createHttpHeaders();
+        return new HttpEntity<>(issueCommentToCreate, httpHeaders);
+    }
+
+    private static MultiValueMap<String, String> createHttpHeaders() {
+        MultiValueMap<String, String> httpHeaders = new HttpHeaders();
+
+        httpHeaders.add(HttpHeaders.AUTHORIZATION, String.format(MateiBotHeaderUtils.AUTHORIZATION_HEADER_VALUE_FORMAT, TEST_GITHUB_TOKEN));
+        httpHeaders.add(HttpHeaders.ACCEPT, MateiBotHeaderUtils.APPLICATION_VND_GITHUB_V3_JSON);
+        httpHeaders.add(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE);
+
+        return httpHeaders;
     }
 }

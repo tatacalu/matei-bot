@@ -1,5 +1,6 @@
 package ro.tatacalu.github.bot.command;
 
+import com.google.common.base.Preconditions;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -15,13 +16,19 @@ import ro.tatacalu.github.bot.exception.InvalidBotCommandException;
 public class BotCommandExecutorImpl implements BotCommandExecutor {
 
     private static final String SAY_HELLO_COMMAND = "say-hello";
-    private static final String HELLO_WORLD_MESSAGE_BODY = "bot: hello world v2";
+    private static final String HELLO_WORLD_MESSAGE_BODY = "bot: hello world";
+
+    private final GitHubClient gitHubClient;
 
     @Autowired
-    private GitHubClient gitHubClient;
+    public BotCommandExecutorImpl(final GitHubClient gitHubClient) {
+        this.gitHubClient = gitHubClient;
+    }
 
     @Override
     public void execute(String botCommand, IssueCommentEvent issueCommentEvent) {
+        Preconditions.checkNotNull(botCommand, "Parameter 'botCommand' cannot be null");
+        Preconditions.checkNotNull(issueCommentEvent, "Parameter 'issueCommentEvent' cannot be null");
 
         if (SAY_HELLO_COMMAND.equals(botCommand)) {
             executeSayHelloCommand(issueCommentEvent);

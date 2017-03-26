@@ -1,8 +1,8 @@
 package ro.tatacalu.github.bot.restcontroller;
 
-import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.springframework.http.HttpStatus;
@@ -28,12 +28,8 @@ public class RepositoryCommentsRestControllerTest {
     @Mock
     private RepositoryCommentsManager repositoryCommentsManagerMock;
 
+    @InjectMocks
     private RepositoryCommentsRestController repositoryCommentsRestController;
-
-    @Before
-    public void setUp() {
-        repositoryCommentsRestController = new RepositoryCommentsRestController(repositoryCommentsManagerMock);
-    }
 
     @Test
     public void testUnsupportedGithubEvent() {

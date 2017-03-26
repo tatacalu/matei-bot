@@ -1,8 +1,8 @@
 package ro.tatacalu.github.bot.restcontroller;
 
-import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 import ro.tatacalu.github.bot.configuration.MateiBotConfigurationProperties;
@@ -25,17 +25,13 @@ public class RootRestControllerTest {
     @Mock
     private MateiBotConfigurationProperties configurationPropertiesMock;
 
+    @InjectMocks
     private RootRestController rootRestController;
-
-    @Before
-    public void setUp() {
-        when(configurationPropertiesMock.getGithubToken()).thenReturn(TestUtils.TEST_GITHUB_TOKEN);
-
-        rootRestController = new RootRestController(configurationPropertiesMock);
-    }
 
     @Test
     public void testGetIndex() {
+        when(configurationPropertiesMock.getGithubToken()).thenReturn(TestUtils.TEST_GITHUB_TOKEN);
+
         String indexResult = rootRestController.index();
 
         assertThat(indexResult, is(notNullValue()));

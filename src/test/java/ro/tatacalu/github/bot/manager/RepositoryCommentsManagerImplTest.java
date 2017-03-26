@@ -1,8 +1,8 @@
 package ro.tatacalu.github.bot.manager;
 
-import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 import ro.tatacalu.github.bot.command.BotCommandExecutor;
@@ -22,12 +22,8 @@ public class RepositoryCommentsManagerImplTest {
     @Mock
     private BotCommandExecutor botCommandExecutorMock;
 
-    private RepositoryCommentsManager repositoryCommentsManager;
-
-    @Before
-    public void setUp() {
-        repositoryCommentsManager = new RepositoryCommentsManagerImpl(botCommandExecutorMock);
-    }
+    @InjectMocks
+    private RepositoryCommentsManagerImpl repositoryCommentsManager;
 
     @Test(expected = NullPointerException.class)
     public void testProcessBotCommandEventNull() {

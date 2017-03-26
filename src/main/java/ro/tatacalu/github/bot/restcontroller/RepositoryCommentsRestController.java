@@ -1,7 +1,6 @@
 package ro.tatacalu.github.bot.restcontroller;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -21,10 +20,8 @@ import java.util.Map;
  * REST Controller called by a GitHub repository webhook.
  */
 @RestController
+@Slf4j
 public class RepositoryCommentsRestController {
-
-    private static final Logger LOGGER = LoggerFactory.getLogger(RepositoryCommentsRestController.class);
-
     public static final String REQUEST_MAPPING_PATH = "/receive-github-event";
 
     @Autowired

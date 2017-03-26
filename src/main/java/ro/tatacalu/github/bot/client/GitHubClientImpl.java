@@ -1,7 +1,6 @@
 package ro.tatacalu.github.bot.client;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -23,9 +22,8 @@ import java.net.URI;
  * Implementation of the {@link GitHubClient} interface.
  */
 @Component
+@Slf4j
 public class GitHubClientImpl implements GitHubClient {
-
-    private static final Logger LOGGER = LoggerFactory.getLogger(GitHubClientImpl.class);
 
     private static final String APPLICATION_VND_GITHUB_V3_JSON = "application/vnd.github.v3+json";
     private static final String AUTHORIZATION_HEADER_VALUE_FORMAT = "token %s";

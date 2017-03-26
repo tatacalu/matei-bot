@@ -1,5 +1,6 @@
 package ro.tatacalu.github.bot.command;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import ro.tatacalu.github.bot.client.GitHubClient;
@@ -10,6 +11,7 @@ import ro.tatacalu.github.bot.exception.InvalidBotCommandException;
  * Implementation of the {@link BotCommandExecutor} interface.
  */
 @Component
+@Slf4j
 public class BotCommandExecutorImpl implements BotCommandExecutor {
 
     private static final String SAY_HELLO_COMMAND = "say-hello";
@@ -30,6 +32,7 @@ public class BotCommandExecutorImpl implements BotCommandExecutor {
     }
 
     private void executeSayHelloCommand(IssueCommentEvent issueCommentEvent) {
+        LOGGER.debug("Executing the [{}] command...", SAY_HELLO_COMMAND);
         gitHubClient.createGitHubComment(issueCommentEvent.getIssue().getCommentsUrl(), HELLO_WORLD_MESSAGE_BODY);
     }
 }

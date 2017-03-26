@@ -8,6 +8,8 @@ import ro.tatacalu.github.bot.domain.IssueCommentEvent;
  */
 public final class RepositoryCommentsManagerHelper {
 
+    private static final String BOT_COMMAND_PREFIX = "@bot ";
+
     /**
      * Utility class - no instantiation.
      */
@@ -35,5 +37,33 @@ public final class RepositoryCommentsManagerHelper {
         Preconditions.checkNotNull(issueCommentEvent, "Parameter 'issueCommentEvent' cannot be null");
 
         return IssueCommentEvent.ACTION_CREATED.equals(issueCommentEvent.getAction());
+    }
+
+    /**
+     * Checks if the provided message is a command for the bot. Bot commands start with "@bot ".
+     *
+     * @param message the message to analyse
+     * @return true if the message is a bot command, false otherwise
+     */
+    public static boolean isBotCommand(String message) {
+        Preconditions.checkNotNull(message, "Parameter 'message' cannot be null");
+
+        String trimmedMessage = message.trim();
+        return !BOT_COMMAND_PREFIX.equals(trimmedMessage) && trimmedMessage.startsWith(BOT_COMMAND_PREFIX);
+    }
+
+    /**
+     * Retrieves the bot command from a provided message.
+     *
+     * @param message the message to analyse
+     * @return the command addressed to the bot
+     * @throws TODO
+     */
+    public static String getBotCommand(String message) {
+        if (isBotCommand(message)) {
+            return message.trim().substring(BOT_COMMAND_PREFIX.length());
+        }
+
+        throw new RuntimeException("Message is not a bot command!");
     }
 }

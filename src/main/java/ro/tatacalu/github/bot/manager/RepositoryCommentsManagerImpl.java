@@ -12,6 +12,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
+import ro.tatacalu.github.bot.command.BotCommandExecutor;
 import ro.tatacalu.github.bot.configuration.MateiBotConfigurationProperties;
 import ro.tatacalu.github.bot.domain.IssueComment;
 import ro.tatacalu.github.bot.domain.IssueCommentEvent;
@@ -30,6 +31,9 @@ public class RepositoryCommentsManagerImpl implements RepositoryCommentsManager 
     @Autowired
     MateiBotConfigurationProperties configurationProperties;
 
+    @Autowired
+    private BotCommandExecutor botCommandExecutor;
+
     @Override
     public void processEvent(IssueCommentEvent issueCommentEvent) {
         Preconditions.checkNotNull(issueCommentEvent, "Parameter 'issueCommentEvent' cannot be null");
@@ -46,30 +50,14 @@ public class RepositoryCommentsManagerImpl implements RepositoryCommentsManager 
 
         // at this stage we have a comment on a pull request
 
-        if (!"@bot say-hello".equals(issueCommentEvent.getComment().getBody())) {
-            LOGGER.info("Not a bot hello world comment, returning");
+        String commentMessage = issueCommentEvent.getComment().getBody();
+        if (!RepositoryCommentsManagerHelper.isBotCommand(commentMessage)) {
+            LOGGER.info("Received comment message is not a bot command, returning. Message: [{}]", commentMessage);
             return;
         }
 
-        URI commentsUrl = issueCommentEvent.getIssue().getCommentsUrl();
+        String botCommand = RepositoryCommentsManagerHelper.getBotCommand(commentMessage);
 
-        IssueCommentToCreate issueCommentToCreate = new IssueCommentToCreate("bot: hello world");
-        MultiValueMap<String, String> headers = new HttpHeaders();
-        headers.add("Authorization", "token " + configurationProperties.getGithubToken());
-        headers.add("Accept", "application/vnd.github.v3+json");
-        headers.add("Content-Type", "application/json");
-
-        HttpEntity<IssueCommentToCreate> commentToCreate = new HttpEntity<>(issueCommentToCreate, headers);
-
-        LOGGER.info("Creating a new comment...");
-
-        RestTemplate restTemplate = new RestTemplate();
-        ResponseEntity<IssueComment> responseEntity = restTemplate.exchange(commentsUrl, HttpMethod.POST, commentToCreate, IssueComment.class);
-
-        HttpStatus statusCode = responseEntity.getStatusCode();
-        HttpHeaders responseHeaders = responseEntity.getHeaders();
-        IssueComment createdIssueComment = responseEntity.getBody();
-
-        LOGGER.info("Comment created: Status code: {}, Response headers: {}, created comment: {}", statusCode, responseHeaders, createdIssueComment);
+        boolean commandExecutedSuccessfully = botCommandExecutor.execute(botCommand, issueCommentEvent);
     }
 }

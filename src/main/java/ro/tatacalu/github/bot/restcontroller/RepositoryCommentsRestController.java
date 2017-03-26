@@ -25,7 +25,7 @@ public class RepositoryCommentsRestController {
 
     private static final String UNSUPPORTED_EVENT_TYPE_FORMAT = "Unsupported GitHub webhook event received! Event type: [%s]";
 
-    public static final String REQUEST_MAPPING_PATH = "/receive-github-event";
+    private static final String REQUEST_MAPPING_PATH = "/receive-github-event";
 
     private final RepositoryCommentsManager repositoryCommentsManager;
 
@@ -47,7 +47,7 @@ public class RepositoryCommentsRestController {
 
         LOGGER.warn("Unsupported GitHub webhook event received! Event type: [{}], Headers: {}, Body: {}", githubEventType, requestHeaders, requestBody);
 
-        return new ResponseEntity(String.format(UNSUPPORTED_EVENT_TYPE_FORMAT, githubEventType), HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>(String.format(UNSUPPORTED_EVENT_TYPE_FORMAT, githubEventType), HttpStatus.BAD_REQUEST);
     }
 
     /**

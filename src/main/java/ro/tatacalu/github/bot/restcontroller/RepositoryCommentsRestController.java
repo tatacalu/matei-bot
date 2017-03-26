@@ -31,8 +31,8 @@ public class RepositoryCommentsRestController {
      * @param requestHeaders the HTTP headers that have been received as part of the HTTP POST Request
      */
     @PostMapping(path = REQUEST_MAPPING_PATH, consumes = MediaType.APPLICATION_JSON_VALUE)
-    public void receiveGithubWebhookEvent(@RequestBody String requestBody, @RequestHeader  Map<String, String> requestHeaders,
-                                          @RequestHeader(HeaderUtils.HEADER_X_GITHUB_EVENT) String githubEventType) {
+    public void receiveGithubWebhookEvent(@RequestBody final String requestBody, @RequestHeader final Map<String, String> requestHeaders,
+                                          @RequestHeader(HeaderUtils.HEADER_X_GITHUB_EVENT) final String githubEventType) {
 
         LOGGER.warn("Unsupported GitHub webhook event received! Event type: [{}], Headers: {}, Body: {}", githubEventType, requestHeaders, requestBody);
     }
@@ -45,8 +45,8 @@ public class RepositoryCommentsRestController {
      * @param requestHeaders the HTTP headers that have been received as part of the HTTP POST Request
      */
     @PostMapping(path = REQUEST_MAPPING_PATH, consumes = MediaType.APPLICATION_JSON_VALUE, headers = {HeaderUtils.HEADER_X_GITHUB_EVENT_ISSUE_COMMENT})
-    public void receiveGithubWebhookIssueCommentEvent(@RequestBody @Validated IssueCommentEvent issueCommentEvent,
-                                                      @RequestHeader  Map<String, String> requestHeaders) {
+    public void receiveGithubWebhookIssueCommentEvent(@RequestBody @Validated final IssueCommentEvent issueCommentEvent,
+                                                      @RequestHeader final Map<String, String> requestHeaders) {
 
         LOGGER.info("GitHub issue_comment webhook event received! Headers: {}, IssueCommentEvent: {}", requestHeaders, issueCommentEvent);
     }

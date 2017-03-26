@@ -22,4 +22,8 @@ public class IssueCommentEvent {
     @NotNull
     @Valid
     IssueComment comment;
+
+    @NotNull
+    @Valid
+    Issue issue;
 }

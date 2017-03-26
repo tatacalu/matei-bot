@@ -1,6 +1,7 @@
 package ro.tatacalu.github.bot.command;
 
 import ro.tatacalu.github.bot.domain.IssueCommentEvent;
+import ro.tatacalu.github.bot.exception.InvalidBotCommandException;
 
 /**
  * Interface for the Bot Command Executor.
@@ -12,7 +13,7 @@ public interface BotCommandExecutor {
      *
      * @param botCommand the command to execute
      * @param issueCommentEvent the event that triggered the command
-     * @return true of the command was successful, false otherwise
+     * @throws InvalidBotCommandException in case the bot command is not supported
      */
-    boolean execute(String botCommand, IssueCommentEvent issueCommentEvent);
+    void execute(String botCommand, IssueCommentEvent issueCommentEvent);
 }

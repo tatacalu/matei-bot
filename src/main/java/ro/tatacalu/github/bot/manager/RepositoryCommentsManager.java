@@ -7,5 +7,5 @@ import ro.tatacalu.github.bot.domain.IssueCommentEvent;
  */
 public interface RepositoryCommentsManager {
 
-    void processEvent(IssueCommentEvent issueCommentEvent);
+    void processBotCommandEvent(IssueCommentEvent issueCommentEvent);
 }

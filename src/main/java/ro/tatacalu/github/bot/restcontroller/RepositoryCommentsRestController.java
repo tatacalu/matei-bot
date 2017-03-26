@@ -3,7 +3,9 @@ package ro.tatacalu.github.bot.restcontroller;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -50,11 +52,13 @@ public class RepositoryCommentsRestController {
      * @param requestHeaders the HTTP headers that have been received as part of the HTTP POST Request
      */
     @PostMapping(path = REQUEST_MAPPING_PATH, consumes = MediaType.APPLICATION_JSON_VALUE, headers = {HeaderUtils.HEADER_X_GITHUB_EVENT_ISSUE_COMMENT})
-    public void receiveGithubWebhookIssueCommentEvent(@RequestBody @Validated final IssueCommentEvent issueCommentEvent,
-                                                      @RequestHeader final Map<String, String> requestHeaders) {
+    public ResponseEntity receiveGithubWebhookIssueCommentEvent(@RequestBody @Validated final IssueCommentEvent issueCommentEvent,
+                                                                @RequestHeader final Map<String, String> requestHeaders) {
 
         LOGGER.info("GitHub issue_comment webhook event received! Headers: {}, IssueCommentEvent: {}", requestHeaders, issueCommentEvent);
 
-        repositoryCommentsManager.processEvent(issueCommentEvent);
+        repositoryCommentsManager.processBotCommandEvent(issueCommentEvent);
+
+        return new ResponseEntity(HttpStatus.OK);
     }
 }

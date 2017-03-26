@@ -15,6 +15,7 @@ import org.springframework.web.client.RestTemplate;
 import ro.tatacalu.github.bot.configuration.MateiBotConfigurationProperties;
 import ro.tatacalu.github.bot.domain.IssueComment;
 import ro.tatacalu.github.bot.domain.IssueCommentToCreate;
+import ro.tatacalu.github.bot.exception.GitHubCommentCreationException;
 
 import java.net.URI;
 
@@ -28,12 +29,13 @@ public class GitHubClientImpl implements GitHubClient {
 
     private static final String APPLICATION_VND_GITHUB_V3_JSON = "application/vnd.github.v3+json";
     private static final String AUTHORIZATION_HEADER_VALUE_FORMAT = "token %s";
+    private static final String GITHUB_FAILURE_MESSAGE_FORMAT = "Failed to create a GitHub comment. Received status code: %i: %s";
 
     @Autowired
     private MateiBotConfigurationProperties configurationProperties;
 
     @Override
-    public boolean createGitHubComment(URI commentsUrl, String commentBody) {
+    public void createGitHubComment(URI commentsUrl, String commentBody) {
         IssueCommentToCreate issueCommentToCreate = new IssueCommentToCreate(commentBody);
         MultiValueMap<String, String> httpHeaders = createHttpHeaders();
         HttpEntity<IssueCommentToCreate> commentToCreate = new HttpEntity<>(issueCommentToCreate, httpHeaders);
@@ -47,8 +49,12 @@ public class GitHubClientImpl implements GitHubClient {
         HttpHeaders responseHeaders = responseEntity.getHeaders();
         IssueComment createdIssueComment = responseEntity.getBody();
 
-        LOGGER.info("Comment created: Status code: {}, Response httpHeaders: {}, created comment: {}", statusCode, responseHeaders, createdIssueComment);
-        return true;
+        LOGGER.info("Comment creation response: Status code: {}, httpHeaders: {}, created comment: {}", statusCode, responseHeaders, createdIssueComment);
+
+        if (!HttpStatus.CREATED.equals(statusCode)) {
+            throw new GitHubCommentCreationException(
+                    String.format(GITHUB_FAILURE_MESSAGE_FORMAT, statusCode.value(), statusCode.getReasonPhrase()));
+        }
     }
 
     private MultiValueMap<String, String> createHttpHeaders() {

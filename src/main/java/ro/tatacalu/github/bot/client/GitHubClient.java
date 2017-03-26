@@ -12,7 +12,6 @@ public interface GitHubClient {
      *
      * @param commentsUrl the Comments API {@link URI} for the GitHub pull request
      * @param commentBody the actual comment message to create
-     * @return true if the comment has been created successfully, false otherwise
      */
-    boolean createGitHubComment(URI commentsUrl, String commentBody);
+    void createGitHubComment(URI commentsUrl, String commentBody);
 }

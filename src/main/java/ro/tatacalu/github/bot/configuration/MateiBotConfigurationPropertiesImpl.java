@@ -19,7 +19,6 @@ public class MateiBotConfigurationPropertiesImpl implements MateiBotConfiguratio
     @Length(min = 40, max = 40, message = "The GitHub token length must be exactly 40 characters long")
     private String githubToken;
 
-
     public void setGithubToken(String githubToken) {
         this.githubToken = githubToken;
     }

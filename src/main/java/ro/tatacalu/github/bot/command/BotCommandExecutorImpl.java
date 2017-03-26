@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import ro.tatacalu.github.bot.client.GitHubClient;
 import ro.tatacalu.github.bot.domain.IssueCommentEvent;
+import ro.tatacalu.github.bot.exception.InvalidBotCommandException;
 
 /**
  * Implementation of the {@link BotCommandExecutor} interface.
@@ -18,16 +19,17 @@ public class BotCommandExecutorImpl implements BotCommandExecutor {
     private GitHubClient gitHubClient;
 
     @Override
-    public boolean execute(String botCommand, IssueCommentEvent issueCommentEvent) {
+    public void execute(String botCommand, IssueCommentEvent issueCommentEvent) {
 
         if (SAY_HELLO_COMMAND.equals(botCommand)) {
-            return executeSayHelloCommand(issueCommentEvent);
+            executeSayHelloCommand(issueCommentEvent);
+            return;
         }
 
-        return false;
+        throw new InvalidBotCommandException(String.format("Invalid bot command [%s]", botCommand));
     }
 
-    private boolean executeSayHelloCommand(IssueCommentEvent issueCommentEvent) {
-        return gitHubClient.createGitHubComment(issueCommentEvent.getIssue().getCommentsUrl(), HELLO_WORLD_MESSAGE_BODY);
+    private void executeSayHelloCommand(IssueCommentEvent issueCommentEvent) {
+        gitHubClient.createGitHubComment(issueCommentEvent.getIssue().getCommentsUrl(), HELLO_WORLD_MESSAGE_BODY);
     }
 }

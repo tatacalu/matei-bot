@@ -13,3 +13,8 @@ The IntelliJ IDEA Lombok plugin has to be installed in order to avoid compilatio
 
 Build:
 $ ./gradlew build
+
+Required environment variables to be set for running the application:
+MATEIBOT_GITHUB_TOKEN=VALID_GITHB_TOKEN_VALUE
+
+The GitHub token will be used in all requests made by the application to the GitHub API.

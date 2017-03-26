@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RestController;
 import ro.tatacalu.github.bot.domain.IssueCommentEvent;
 import ro.tatacalu.github.bot.manager.RepositoryCommentsManager;
-import ro.tatacalu.github.bot.util.HeaderUtils;
+import ro.tatacalu.github.bot.util.MateiBotHeaderUtils;
 
 import java.util.Map;
 
@@ -36,7 +36,7 @@ public class RepositoryCommentsRestController {
      */
     @PostMapping(path = REQUEST_MAPPING_PATH, consumes = MediaType.APPLICATION_JSON_VALUE)
     public void receiveGithubWebhookEvent(@RequestBody final String requestBody, @RequestHeader final Map<String, String> requestHeaders,
-                                          @RequestHeader(HeaderUtils.HEADER_X_GITHUB_EVENT) final String githubEventType) {
+                                          @RequestHeader(MateiBotHeaderUtils.HEADER_X_GITHUB_EVENT) final String githubEventType) {
 
         LOGGER.warn("Unsupported GitHub webhook event received! Event type: [{}], Headers: {}, Body: {}", githubEventType, requestHeaders, requestBody);
     }
@@ -48,7 +48,7 @@ public class RepositoryCommentsRestController {
      * @param issueCommentEvent the {link IssueCommentEvent} received as part of the HTTP POST Request
      * @param requestHeaders the HTTP headers that have been received as part of the HTTP POST Request
      */
-    @PostMapping(path = REQUEST_MAPPING_PATH, consumes = MediaType.APPLICATION_JSON_VALUE, headers = {HeaderUtils.HEADER_X_GITHUB_EVENT_ISSUE_COMMENT})
+    @PostMapping(path = REQUEST_MAPPING_PATH, consumes = MediaType.APPLICATION_JSON_VALUE, headers = {MateiBotHeaderUtils.HEADER_X_GITHUB_EVENT_ISSUE_COMMENT})
     public ResponseEntity receiveGithubWebhookIssueCommentEvent(@RequestBody @Validated final IssueCommentEvent issueCommentEvent,
                                                                 @RequestHeader final Map<String, String> requestHeaders) {
 

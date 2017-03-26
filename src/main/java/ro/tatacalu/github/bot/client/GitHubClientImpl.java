@@ -15,6 +15,7 @@ import ro.tatacalu.github.bot.configuration.MateiBotConfigurationProperties;
 import ro.tatacalu.github.bot.domain.IssueComment;
 import ro.tatacalu.github.bot.domain.IssueCommentToCreate;
 import ro.tatacalu.github.bot.exception.GitHubCommentCreationException;
+import ro.tatacalu.github.bot.util.MateiBotHeaderUtils;
 
 import java.net.URI;
 
@@ -25,8 +26,6 @@ import java.net.URI;
 @Slf4j
 public class GitHubClientImpl implements GitHubClient {
 
-    private static final String APPLICATION_VND_GITHUB_V3_JSON = "application/vnd.github.v3+json";
-    private static final String AUTHORIZATION_HEADER_VALUE_FORMAT = "token %s";
     private static final String GITHUB_FAILURE_MESSAGE_FORMAT = "Failed to create a GitHub comment. Received status code: %i: %s";
 
     @Autowired
@@ -58,8 +57,8 @@ public class GitHubClientImpl implements GitHubClient {
     private MultiValueMap<String, String> createHttpHeaders() {
         MultiValueMap<String, String> httpHeaders = new HttpHeaders();
 
-        httpHeaders.add(HttpHeaders.AUTHORIZATION, String.format(AUTHORIZATION_HEADER_VALUE_FORMAT, configurationProperties.getGithubToken()));
-        httpHeaders.add(HttpHeaders.ACCEPT, APPLICATION_VND_GITHUB_V3_JSON);
+        httpHeaders.add(HttpHeaders.AUTHORIZATION, String.format(MateiBotHeaderUtils.AUTHORIZATION_HEADER_VALUE_FORMAT, configurationProperties.getGithubToken()));
+        httpHeaders.add(HttpHeaders.ACCEPT, MateiBotHeaderUtils.APPLICATION_VND_GITHUB_V3_JSON);
         httpHeaders.add(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE);
 
         return httpHeaders;

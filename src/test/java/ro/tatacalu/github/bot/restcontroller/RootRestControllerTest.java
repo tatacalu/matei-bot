@@ -23,15 +23,15 @@ import static org.mockito.Mockito.when;
 public class RootRestControllerTest {
 
     @Mock
-    private MateiBotConfigurationProperties configurationProperties;
+    private MateiBotConfigurationProperties configurationPropertiesMock;
 
     private RootRestController rootRestController;
 
     @Before
     public void setUp() {
-        when(configurationProperties.getGithubToken()).thenReturn(TestUtils.TEST_GITHUB_TOKEN);
+        when(configurationPropertiesMock.getGithubToken()).thenReturn(TestUtils.TEST_GITHUB_TOKEN);
 
-        rootRestController = new RootRestController(configurationProperties);
+        rootRestController = new RootRestController(configurationPropertiesMock);
     }
 
     @Test
@@ -41,7 +41,7 @@ public class RootRestControllerTest {
         assertThat(indexResult, is(notNullValue()));
         assertThat(indexResult, startsWith("This is matei-bot for Github, current UTC time: "));
 
-        verify(configurationProperties).getGithubToken();
-        verifyNoMoreInteractions(configurationProperties);
+        verify(configurationPropertiesMock).getGithubToken();
+        verifyNoMoreInteractions(configurationPropertiesMock);
     }
 }

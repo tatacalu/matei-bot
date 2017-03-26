@@ -21,7 +21,7 @@ public final class RepositoryCommentsManagerHelper {
      * @param issueCommentEvent the event to analyse
      * @return true if the comment has been made on a pull request, false otherwise
      */
-    public static boolean isIargetIssuePullRequest(final IssueCommentEvent issueCommentEvent) {
+    public static boolean isTargetIssuePullRequest(final IssueCommentEvent issueCommentEvent) {
         Preconditions.checkNotNull(issueCommentEvent, "Parameter 'issueCommentEvent' cannot be null");
 
         return (issueCommentEvent.getIssue() != null) && (issueCommentEvent.getIssue().getPullRequest() != null) && (issueCommentEvent.getIssue().getPullRequest().getUrl() != null);
@@ -57,7 +57,7 @@ public final class RepositoryCommentsManagerHelper {
      *
      * @param message the message to analyse
      * @return the command addressed to the bot
-     * @throws TODO
+     * @throws RuntimeException if the provided message is not a bot command
      */
     public static String getBotCommand(String message) {
         if (isBotCommand(message)) {

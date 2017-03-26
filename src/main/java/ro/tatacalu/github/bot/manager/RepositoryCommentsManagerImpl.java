@@ -15,14 +15,18 @@ import ro.tatacalu.github.bot.exception.UnsupportedIssueCommentEventException;
 @Slf4j
 public class RepositoryCommentsManagerImpl implements RepositoryCommentsManager {
 
+    private final BotCommandExecutor botCommandExecutor;
+
     @Autowired
-    private BotCommandExecutor botCommandExecutor;
+    public RepositoryCommentsManagerImpl(final BotCommandExecutor botCommandExecutor) {
+        this.botCommandExecutor = botCommandExecutor;
+    }
 
     @Override
     public void processBotCommandEvent(IssueCommentEvent issueCommentEvent) {
         Preconditions.checkNotNull(issueCommentEvent, "Parameter 'issueCommentEvent' cannot be null");
 
-        if (!RepositoryCommentsManagerHelper.isIargetIssuePullRequest(issueCommentEvent)) {
+        if (!RepositoryCommentsManagerHelper.isTargetIssuePullRequest(issueCommentEvent)) {
             LOGGER.info("The received IssueCommentEvent was not triggered by a Pull Request. Event: {}", issueCommentEvent);
             throw new UnsupportedIssueCommentEventException(issueCommentEvent, "The received IssueCommentEvent was not triggered by a Pull Request");
         }

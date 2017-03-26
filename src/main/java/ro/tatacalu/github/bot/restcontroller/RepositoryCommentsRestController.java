@@ -22,10 +22,17 @@ import java.util.Map;
 @RestController
 @Slf4j
 public class RepositoryCommentsRestController {
+
+    private static final String UNSUPPORTED_EVENT_TYPE_FORMAT = "Unsupported GitHub webhook event received! Event type: [%s]";
+
     public static final String REQUEST_MAPPING_PATH = "/receive-github-event";
 
+    private final RepositoryCommentsManager repositoryCommentsManager;
+
     @Autowired
-    private RepositoryCommentsManager repositoryCommentsManager;
+    public RepositoryCommentsRestController(final RepositoryCommentsManager repositoryCommentsManager) {
+        this.repositoryCommentsManager = repositoryCommentsManager;
+    }
 
     /**
      * Method called when a GitHub event of an unsupported type not explicitly dealt with has been received by the application. The event type is transmitted
@@ -35,10 +42,12 @@ public class RepositoryCommentsRestController {
      * @param requestHeaders the HTTP headers that have been received as part of the HTTP POST Request
      */
     @PostMapping(path = REQUEST_MAPPING_PATH, consumes = MediaType.APPLICATION_JSON_VALUE)
-    public void receiveGithubWebhookEvent(@RequestBody final String requestBody, @RequestHeader final Map<String, String> requestHeaders,
+    public ResponseEntity<String> receiveGithubWebhookEvent(@RequestBody final String requestBody, @RequestHeader final Map<String, String> requestHeaders,
                                           @RequestHeader(MateiBotHeaderUtils.HEADER_X_GITHUB_EVENT) final String githubEventType) {
 
         LOGGER.warn("Unsupported GitHub webhook event received! Event type: [{}], Headers: {}, Body: {}", githubEventType, requestHeaders, requestBody);
+
+        return new ResponseEntity(String.format(UNSUPPORTED_EVENT_TYPE_FORMAT, githubEventType), HttpStatus.BAD_REQUEST);
     }
 
     /**

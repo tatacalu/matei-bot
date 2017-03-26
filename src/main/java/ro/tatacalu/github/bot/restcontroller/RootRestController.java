@@ -18,8 +18,12 @@ public class RootRestController {
 
     private static final String GREETING_STRING_FORMAT = "This is matei-bot for Github, current UTC time: %s";
 
+    private final MateiBotConfigurationProperties configurationProperties;
+
     @Autowired
-    private MateiBotConfigurationProperties configurationProperties;
+    public RootRestController(final MateiBotConfigurationProperties configurationProperties) {
+        this.configurationProperties = configurationProperties;
+    }
 
     @RequestMapping("/")
     public String index() {

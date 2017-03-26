@@ -25,9 +25,6 @@ public class RepositoryCommentsManagerImpl implements RepositoryCommentsManager 
 
     private static final Logger LOGGER = LoggerFactory.getLogger(RepositoryCommentsManagerImpl.class);
 
-    @Value("#{cacheManager.getCache('commentIds')}")
-    private Cache cache;
-
     @Autowired
     MateiBotConfigurationProperties configurationProperties;
 
@@ -52,16 +49,6 @@ public class RepositoryCommentsManagerImpl implements RepositoryCommentsManager 
             return;
         }
 
-        Long commentId = issueCommentEvent.getComment().getId();
-        Cache.ValueWrapper valueWrapper = cache.get(commentId);
-        if (valueWrapper != null) {
-            // the ID exists in the cache already => CREATED BY THE APPLICATION; do not proceed => avoid endless loop
-            LOGGER.info("Comment ID [{}] was found in the cache, returning", commentId);
-            return;
-        } else {
-            LOGGER.info("Comment ID [{}] was not found in the cache, continue", commentId);
-        }
-
         URI commentsUrl = issueCommentEvent.getIssue().getCommentsUrl();
 
         IssueCommentToCreate issueCommentToCreate = new IssueCommentToCreate("bot: hello world");
@@ -82,9 +69,5 @@ public class RepositoryCommentsManagerImpl implements RepositoryCommentsManager 
         IssueComment createdIssueComment = responseEntity.getBody();
 
         LOGGER.info("Comment created: Status code: {}, Response headers: {}, created comment: {}", statusCode, responseHeaders, createdIssueComment);
-
-        Long createdIssueCommentId = createdIssueComment.getId();
-        cache.put(createdIssueCommentId, Boolean.TRUE);
-        LOGGER.info("Comment ID [{}] was put in the cache", createdIssueCommentId);
     }
 }

@@ -23,12 +23,8 @@ repositories {
 
 dependencies {
 	compile('org.springframework.boot:spring-boot-starter-web')
-	compile('org.springframework.boot:spring-boot-starter-cache')
-
 	compile('com.fasterxml.jackson.datatype:jackson-datatype-jsr310')
 	compile('com.google.guava:guava:21.0')
-	compile('javax.cache:cache-api')
-	compile('org.ehcache:ehcache')
 
 	compileOnly('org.projectlombok:lombok')
 
